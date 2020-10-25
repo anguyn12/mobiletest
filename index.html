@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Pre-MLP</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta aframe-injected="" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=no,minimal-ui" />
+  <meta aframe-injected="" name="mobile-web-app-capable" content="yes" />
+  <meta aframe-injected="" name="theme-color" content="black" />
+
+  <!-- import the webpage's stylesheet -->
+  <link rel="stylesheet" href="/style.css" />
+
+  <script>
+    // WebXR requires HTTPS, so the site doesn't work if someone manually enters
+    // the URL and ends up using HTTP. To work around this, force redirect from
+    // http to https for non-localhost addresses.
+    if (
+      window.location.protocol == "http:" &&
+      window.location.hostname != "localhost" &&
+      window.location.hostname != "127.0.0.1" &&
+      window.location.hostname != "[::1]"
+    ) {
+      window.location = window.location.href.replace("http:", "https:");
+    }
+  </script>
+
+
+
+  <!-- import the webpage's javascript files -->
+  <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+  <script src="https://unpkg.com/aframe-event-set-component@4.2.1/dist/aframe-event-set-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-layout-component@3.0.1"></script>
+  <script src="./inflate.min.js"></script>
+  <script src="./aframe-effects.js"></script>
+  <script src="./main.js"></script>
+  <script src="./displacement-offset-shader.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+  <script src="https://unpkg.com/aframe-curve-component/dist/aframe-curve-component.min.js"></script>
+  <script src="https://rawgit.com/protyze/aframe-alongpath-component/master/dist/aframe-alongpath-component.min.js"></script>
+  <script src="https://cdn.rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+  <script src="https://unpkg.com/aframe-particle-system-component@1.0.x/dist/aframe-particle-system-component.min.js"></script>
+  <script src="./aframe-shaderfrog-component.min.js"></script>
+
+</head>
+
+<body>
+  <a-scene stats="" inspector="" light="defaultLightsEnabled: false" fog="color:  #ffb870;  far:  200;  density:  10;  near:  0.5">
+    <a-assets>
+      <audio id="radiomusic" src="https://cdn.glitch.com/fb0c03b2-3aa2-42a1-adf1-197da89b077a%2FMadeon_Pendulum_Island_Remix.mp3?v=1602816908559" src="assets/Madeon_Pendulum_Island_Remix.mp3" volume="0.5" preload="auto"></audio>
+      <a-asset-item id="veg" src="./assets/veg.glb"></a-asset-item>
+      <a-asset-item id="veg12" src="./assets/veg12.glb"></a-asset-item>
+      <a-asset-item id="veg6" src="./assets/veg6.glb"></a-asset-item>
+      <a-asset-item id="m3" src="./assets/m3.gltf"></a-asset-item>
+      <a-asset-item id="m1" src="./assets/m1.gltf"></a-asset-item>
+      <a-asset-item id="m2" src="./assets/m2.gltf"></a-asset-item>
+      <a-asset-item id="m4" src="./assets/m4.gltf"></a-asset-item>
+      <a-asset-item id="m5" src="./assets/m5.gltf"></a-asset-item>
+      <a-asset-item id="m6" src="./assets/m6.gltf"></a-asset-item>
+      <a-asset-item id="m7" src="./assets/m7.gltf"></a-asset-item>
+      <a-asset-item id="m8" src="./assets/m8.gltf"></a-asset-item>
+      <a-asset-item id="m10" src="./assets/m10.gltf"></a-asset-item>
+      <a-asset-item id="m9" src="./assets/m9.gltf"></a-asset-item>
+      <a-asset-item id="car" src="./assets/cartooncar.gltf"></a-asset-item>
+      <a-asset-item id="base" src="./assets/basem.gltf"></a-asset-item>
+      <a-asset-item id="tunnel" src="./assets/tunnel.gltf" material-grid-glitch="color: black;"></a-asset-item>
+      <a-asset-item id="waterfall" src="./assets/waterfall.glb"></a-asset-item>
+      <a-asset-item id="water" src="./assets/water.obj"></a-asset-item>
+      <a-asset-item id="cloud1" src="./assets/cloud1.glb"></a-asset-item>
+      <a-asset-item id="cloud2" src="./assets/cloud2.glb"></a-asset-item>
+      <a-asset-item id="cloud3" src="./assets/cloud3.glb"></a-asset-item>
+      <a-asset-item id="cloud4" src="./assets/cloud4.glb"></a-asset-item>
+    </a-assets>
+
+    <a-sound src="#radiomusic" autoplay="true" positional="false"></a-sound>
+    <a-entity position="0 50 0" rotation="-40 -90 0" movement-controls="acceleration: 260; easing: 10; enabled: true; fly: true;">
+      <a-entity camera look-controls="pointerLockEnabled: true;" wasd-controls visible="true" cursor="rayOrigin: mouse;" raycaster="">
+        <a-cursor id="cursor" fuse="true" raycaster="objects: .clickable" material="color:orange" animation__click="property: scale; startEvents: click; easing: easeInCubic; dur: 150; from: 0.1 0.1 0.1; to: 1 1 1"
+          animation__fusing="property: scale; startEvents: fusing; easing: easeInCubic; dur: 1500; from: 1 1 1; to: 0.1 0.1 0.1" animation__mouseleave="property: scale; startEvents: mouseleave; easing: easeInCubic; dur: 500; to: 1 1 1">
+        </a-cursor>
+      </a-entity>
+    </a-entity>
+    <!--MOUNTAIN START HERE-->
+    <a-entity gltf-model="#m9" position="0 5 -22.5" scale="0.05 0.05 0.05"></a-entity>
+    <a-entity gltf-model="#m2" position="0 5 22" scale="0.05 0.05 0.05" rotation="0 120 0"></a-entity>
+    <a-entity gltf-model="#m2" position="30 5 -23.5" scale="0.05 0.05 0.05"></a-entity>
+    <a-entity gltf-model="#m1" position="56 0 20.9" scale="0.05 0.05 0.05" rotation="0 120 0"></a-entity>
+    <a-entity gltf-model="#m3" position="60 5 -24.7" scale="0.05 0.05 0.05"></a-entity>
+    <a-entity gltf-model="#m4" position="60 0 22" scale="0.05 0.05 0.05" rotation="0 120 0"></a-entity>
+    <a-entity gltf-model="#m3" position="90 0 22" scale="0.05 0.05 0.05" rotation="0 120 0"></a-entity>
+    <a-entity gltf-model="#m4" position="90 0 22" scale="0.05 0.05 0.05"></a-entity>
+    <a-entity gltf-model="#m5" position="100 0 -29.3" scale="0.05 0.05 0.05" rotation="0 0 0"></a-entity>
+    <a-entity gltf-model="#m6" position="-30 8 -24" scale="0.05 0.05 0.05" rotation="0 120 0"></a-entity>
+    <a-entity gltf-model="#m7" position="-30 8 22" scale="0.05 0.05 0.05" rotation="0 120 0"></a-entity>
+    <a-entity gltf-model="#m7" position="-130 -20 20" scale="0.5 0.5 0.5" rotation="0 140 0"></a-entity>
+    <a-entity gltf-model="#m1" position="115 -10 0.9" scale="0.1 0.08 0.1" rotation="0 140 0"></a-entity>
+    <a-entity gltf-model="#m1" position="140 -10 0.9" scale="0.08 0.08 0.08" rotation="0 120 0"></a-entity>
+    <a-entity gltf-model="#m1" position="195 -10 0.9" scale="0.1 0.08 0.1" rotation="0 140 0"></a-entity>
+    <a-entity gltf-model="#m1" position="210 -10 0.9" scale="0.08 0.08 0.08" rotation="0 120 0"></a-entity>
+    <a-entity gltf-model="#veg" position="0 0 -42" scale="0.05 0.05 0.05"></a-entity>
+    <a-entity gltf-model="#veg" position="-15 5 -15" scale="0.03 0.03 0.03"></a-entity>
+    <a-entity gltf-model="#veg6" position="5 0 10" scale="0.03 0.03 0.03"></a-entity>
+    <a-entity gltf-model="#veg12" position="35 0 -10" scale="0.02 0.02 0.02"></a-entity>
+    <a-entity gltf-model="#base" position="-50 -32 0" scale="1 1 1"></a-entity>
+    <a-entity gltf-model="#tunnel" position="-80 14 0" scale="0.05 0.05 0.05"></a-entity>
+
+    <!-- SHADER FROG
+    <a-cylinder  position="0 30 0" scale="10 10 10" shader-frog="name:Retrowave_Grid_Shader"></a-cylinder>
+    ShaderFrog Name: CS1_Shader, Cool_Tiles_Shader, Cosmic_Shader, Disco_Shader, Electric_Shader,
+    Flowing_Circles_Shader, Goo_Shader, Green_Dance_Shader, Jelly_Shader, Marching_Ants_Shader, Ova_Shader, Polkadot_Shader, Psycho_Shader, Sun_Shader, Thruster_Shader, -->
+    <!--displaccement  <a-sphere material="shader:displacement-offset;"
+          myoffset-updater
+          scale="58 33 58"
+          radius="0.4"
+          position="180 -10 90"
+          segments-height="512"
+          segments-width="512"
+          opacity ="0.7"
+          color="blue"
+          ></a-sphere>-->
+    <!--Grid <a-sphere material="shader:grid-glitch; color: blue;" radius="0.5" position="0 1.5 -2"></a-sphere> -->
+
+    <!--MOUNTAIN END HERE-->
+    <!--WATERFALL START HERE-->
+    <a-entity gltf-model="#m5" position="186.05438 -20.9756 121.58013" scale="0.1 0.15 0.1" rotation="0 100 0">
+      <a-obj-model src="#water" position="380 107.9756 110.58013" scale="1 1 1" rotation="-50 80" ocean="density: 100; width: 150; depth: 400; speed: 10" material="color: #2693ff; opacity: 0.95; roughness: 1"></a-obj-model>
+      <a-obj-model src="#water" position="35 236 49.6" scale="1 1 1" rotation="-90 80" ocean="density: 100; width: 150; depth: 400; speed: 10" material="color: #2693ff; opacity: 0.95; roughness: 1"></a-obj-model>
+    </a-entity>
+    <a-entity gltf-model="#m5" position="134.25754 -20.9756 109.65781" scale="0.1 0.1 0.1" rotation="0 210.00000000000003 0">
+    </a-entity>
+    <a-entity gltf-model="#m5" position="256.78047 -20.9756 109.65781" scale="0.2 0.15 0.1" rotation="0 190 0">
+    </a-entity>
+    <a-entity id="ocean" ocean="density: 20; width: 450; depth: 280; speed: 4" material="color: #2693ff; opacity: 1; metalness: 0; roughness: 1" position="180 -5 121.58013" rotation="-90 0 0"></a-entity>
+    <a-entity gltf-model="#veg" position="180 0 122" scale="0.1 0.1 0.1"></a-entity>
+    <a-entity gltf-model="#veg" position="213.04855 23.04004 98.23276" scale="0.04 0.04 0.04" rotation="0.38 0 10"></a-entity>
+    <!--  <a-entity position="18 2.25 -15" particle-system="preset: dust"></a-entity>-->
+    <!--WATERFALL END HERE-->
+
+    <!--<a-entity gltf-model="#waterfall" position="0 34 70" scale="0.05 0.5 0.5 " rotation="0 0 0" ></a-entity>-->
+    <!--CLOUD START HERE-->
+    <a-entity gltf-model="#cloud1" position="0 35 114" scale="0.5 0.5 0.75" material=""></a-entity>
+    <a-entity gltf-model="#cloud2" position="40 25 -124" scale="0.5 0.5 0.75" material=""></a-entity>
+    <a-entity gltf-model="#cloud3" position="84 25 139" scale="0.5 0.7 1.5" material=""></a-entity>
+    <a-entity gltf-model="#cloud4" position="100 55 -124" scale="1 0.7 0.4" material=""></a-entity>
+    <a-entity gltf-model="#cloud3" position="104 25 139" scale="0.7 0.7 1" material=""></a-entity>
+    <a-entity gltf-model="#cloud4" position="180 55 -124" scale="0.7 0.7 0.7" material=""></a-entity>
+    <!--CLOUD END HERE-->
+
+    <!--ROAD/RACE-->
+    <a-curve id="track1">
+      <a-curve-point position="-80 10 -1"></a-curve-point>
+      <a-curve-point position="0 9 -1"></a-curve-point>
+      <a-curve-point position="31 8 -1"></a-curve-point>
+      <a-curve-point position="41 8 0"></a-curve-point>
+      <a-curve-point position="49 8 0"></a-curve-point>
+      <a-curve-point position="60 8 0"></a-curve-point>
+      <a-curve-point position="80 8 0"></a-curve-point>
+      <a-curve-point position="100 9 -10"></a-curve-point>
+      <a-curve-point position="250 10 -10"></a-curve-point>
+    </a-curve>
+    <!-- Draw the Curve -->
+    <a-draw-curve curveref="#track1" material="shader: line; color: blue;"></a-draw-curve>
+
+    <!-- Clone a Box along the Curve -->
+    <a-entity clone-along-curve="curve: #track1; spacing: 0.05; scale: 1 1 1; rotation: 0 0 0;" geometry="primitive:box; height:10; width:7; depth:3.5" material="src: ./assets/roadt2.png"></a-entity>
+    <!--ROAD/RACE END-->
+
+    <!--CAR GO HERE-->
+    <a-entity alongpath="curve: #track1; dur: 10000">
+      <a-entity position="-10 7 0" gltf-model="#car" scale="0.006 0.006 0.006" animation-mixer shadow="cast: false; receive: false"></a-entity>
+    </a-entity>
+    <!--CAR END HERE-->
+
+    <!--<a-sound
+          id="sound1"
+          src="insert entity here"
+          volume="0.8"
+          autoplay="true"
+          animation__radiovol="property: volume; easing:linear;delay:25000; dur:10000; startEvents:voldown; to: 0.2"
+        ></a-sound>-->
+
+    <a-entity light="type: ambient; intensity: 0.6 ;"></a-entity>
+
+    <!--  <a-light type="directional" light="castShadow: true;
+                      shadowMapHeight: 1024;
+                      shadowMapWidth: 1024;
+                      shadowCameraLeft: -7;
+                      shadowCameraRight: 5;
+                      shadowCameraBottom: -5;
+                      shadowCameraTop: 5;" id="light" target="#" position="-4.18 15.75 -21.49"></a-light>-->
+    <!-- Sky -->
+    <a-gradient-sky material="shader:  gradient;  topColor:  28 191 255;  bottomColor: 98 164 150;  offset:  400;  repeat:  [object Object];  side:  double;  exponent:  0.6" hide-in-ar-mode></a-gradient-sky>
+    <!-- This shadow-receiving plane is only visible in AR mode. -->
+    <a-plane height="15" width="15" position="0 0 -3" rotation="-90 0 0" shadow="receive: true" ar-shadows="opacity: 0.3" visible="false"></a-plane>
+
+  </a-scene>
+  <!-- <div class="rs-base">
+    <div class="rs-container" style="height: auto;">
+      <h1>Framerate</h1>
+      <div class="rs-group">
+        <div class="rs-counter-base">
+          <canvas width="200" height="10" class="rs-canvas" style="width: 200px; height: 10px;"></canvas><span class="rs-counter-id">raf</span>
+          <div class="rs-counter-value">16.7</div>
+        </div>
+        <div class="rs-counter-base">
+          <canvas width="200" height="10" class="rs-canvas" style="width: 200px; height: 10px;"></canvas><span class="rs-counter-id">fps</span>
+          <div class="rs-counter-value">60.02</div>
+        </div>
+      </div>
+      <h1>Three.js - Memory</h1>
+      <div class="rs-group">
+        <div class="rs-counter-base">
+          <canvas width="200" height="10" class="rs-canvas" style="width: 200px; height: 10px;"></canvas><span class="rs-counter-id">Geometries</span>
+          <div class="rs-counter-value">2</div>
+        </div>
+        <div class="rs-counter-base">
+          <canvas width="200" height="10" class="rs-canvas" style="width: 200px; height: 10px;"></canvas><span class="rs-counter-id">Programs</span>
+          <div class="rs-counter-value">4</div>
+        </div>
+        <div class="rs-counter-base">
+          <canvas width="200" height="10" class="rs-canvas" style="width: 200px; height: 10px;"></canvas><span class="rs-counter-id">Textures</span>
+          <div class="rs-counter-value">2</div>
+        </div>
+      </div>
+      <h1>Three.js - Render</h1>
+      <div class="rs-group">
+        <div class="rs-counter-base">
+          <canvas width="200" height="10" class="rs-canvas" style="width: 200px; height: 10px;"></canvas><span class="rs-counter-id">Calls</span>
+          <div class="rs-counter-value">2</div>
+        </div>
+        <div class="rs-counter-base alarm">
+          <canvas width="200" height="10" class="rs-canvas" style="width: 200px; height: 10px;"></canvas><span class="rs-counter-id">Faces</span>
+          <div class="rs-counter-value">36780</div>
+        </div>
+        <div class="rs-counter-base">
+          <canvas width="200" height="10" class="rs-canvas" style="width: 200px; height: 10px;"></canvas><span class="rs-counter-id">Points</span>
+          <div class="rs-counter-value">0</div>
+        </div>
+        <div class="rs-counter-base">
+          <canvas width="200" height="10" class="rs-canvas" style="width: 200px; height: 10px;"></canvas><span class="rs-counter-id">Vertices</span>
+          <div class="rs-counter-value">110340</div>
+        </div>
+      </div>
+      <h1>A-Frame</h1>
+      <div class="rs-group">
+        <div class="rs-counter-base">
+          <canvas width="200" height="10" class="rs-canvas" style="width: 200px; height: 10px;"></canvas><span class="rs-counter-id">Entities</span>
+          <div class="rs-counter-value">13</div>
+        </div>
+        <div class="rs-counter-base">
+          <canvas width="200" height="10" class="rs-canvas" style="width: 200px; height: 10px;"></canvas><span class="rs-counter-id">Load Time</span>
+          <div class="rs-counter-value">10447</div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</body>
+
+</html>
