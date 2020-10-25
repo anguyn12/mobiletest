@@ -71,6 +71,7 @@
       <a-asset-item id="cloud2" src="./assets/cloud2.glb"></a-asset-item>
       <a-asset-item id="cloud3" src="./assets/cloud3.glb"></a-asset-item>
       <a-asset-item id="cloud4" src="./assets/cloud4.glb"></a-asset-item>
+            <a-asset-item id="road" src="./assets/roadt2.png"></a-asset-item>
     </a-assets>
 
     <a-sound src="#radiomusic" autoplay="true" positional="false"></a-sound>
@@ -163,7 +164,7 @@
     <a-draw-curve curveref="#track1" material="shader: line; color: blue;"></a-draw-curve>
 
     <!-- Clone a Box along the Curve -->
-    <a-entity clone-along-curve="curve: #track1; spacing: 0.05; scale: 1 1 1; rotation: 0 0 0;" geometry="primitive:box; height:10; width:7; depth:3.5" material="src: ./assets/roadt2.png"></a-entity>
+    <a-entity clone-along-curve="curve: #track1; spacing: 0.05; scale: 1 1 1; rotation: 0 0 0;" geometry="primitive:box; height:10; width:7; depth:3.5" material="src:./assets/roadt2.jpg"></a-entity>
     <!--ROAD/RACE END-->
 
     <!--CAR GO HERE-->
